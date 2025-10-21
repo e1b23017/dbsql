@@ -22,7 +22,12 @@ public class Sample3AuthConfiguration {
             .logoutSuccessUrl("/")) // ログアウト後に / にリダイレクト
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/sample4/**").authenticated() // /sample4/以下は認証済みであること
-            .anyRequest().permitAll()); // 上記以外は全員アクセス可能
+            .anyRequest().permitAll())
+            .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/h2-console/*", "/sample2*/**")) // sample2用にCSRF対策を無効化
+        .headers(headers -> headers
+            .frameOptions(frameOptions -> frameOptions
+                .sameOrigin()));
     return http.build();
   }
 
